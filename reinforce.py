@@ -1,5 +1,6 @@
 import argparse
 import gym
+import gym_param
 import numpy as np
 from itertools import count
 
@@ -22,10 +23,11 @@ parser.add_argument('--log-interval', type=int, default=10, metavar='N',
 args = parser.parse_args()
 
 
-env = gym.make('CartPole-v0')
+# env = gym.make('CartPole-v0')
+env = gym.make('Cartpole-param-v0')
 env.seed(args.seed)
 torch.manual_seed(args.seed)
-hidden_layer_size = 5
+hidden_layer_size = 4
 
 
 class Policy(nn.Module):
@@ -78,6 +80,7 @@ def finish_episode():
 
 def main():
     running_reward = 10
+
     for i_episode in count(1):
         state = env.reset()
         for t in range(10000):  # Don't infinite loop while learning
@@ -89,7 +92,7 @@ def main():
             if done:
                 break
 
-        running_reward = running_reward * 0.99 + t * 0.01
+        running_reward = running_reward * 0.9 + t * 0.1
         finish_episode()
         if i_episode % args.log_interval == 0:
             print('Episode {}\tLast length: {:5d}\tAverage length: {:.2f}'.format(
@@ -98,6 +101,20 @@ def main():
             print("Solved! Running reward is now {} and "
                   "the last episode runs to {} time steps!".format(running_reward, t))
             break
+
+    print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
+    model_parameters = policy.parameters()#filter(lambda p: p.requires_grad, policy.parameters())
+    print(model_parameters)
+
+    params = sum([np.prod(p.size()) for p in model_parameters])
+    print(params)
+
+    torch.save(policy.state_dict(), 'reinforce_test.pt')
+
+    new_policy = Policy()
+    new_policy.load_state_dict(torch.load('reinforce_test.pt'))
+    print(new_policy.parameters())
+
 
 
 if __name__ == '__main__':
