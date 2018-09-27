@@ -25,7 +25,9 @@ args = parser.parse_args()
 
 # env = gym.make('CartPole-v0')
 env = gym.make('Cartpole-param-v0')
-env.seed(args.seed)
+# mass then length
+env.param_switch(10., 0.25)
+# env.seed(args.seed)
 torch.manual_seed(args.seed)
 hidden_layer_size = 4
 
@@ -97,12 +99,11 @@ def main():
         if i_episode % args.log_interval == 0:
             print('Episode {}\tLast length: {:5d}\tAverage length: {:.2f}'.format(
                 i_episode, t, running_reward))
-        if running_reward > env.spec.reward_threshold:
+        if running_reward > 195.:
             print("Solved! Running reward is now {} and "
                   "the last episode runs to {} time steps!".format(running_reward, t))
             break
 
-    print("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
     model_parameters = policy.parameters()#filter(lambda p: p.requires_grad, policy.parameters())
     print(model_parameters)
 

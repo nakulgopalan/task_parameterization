@@ -1,0 +1,5 @@
+Two representations would be considered
+1) task input with state to a policy that learns everything
+2) task defines a network, that then defines a policy over states to learn
+
+experiment 1:  sample 10,000 tasks from mass -> m \in [0.1, 10], l = \in [0.3, 10]
