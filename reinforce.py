@@ -24,6 +24,7 @@ parser.add_argument('--mass', type=float, default=0.1, metavar='mass',
                     help='mass of pendulum, default, 0.1')
 parser.add_argument('--length', type=float, default=0.5, metavar='length',
                     help='length of pendulum, default, 0.5')
+parser.add_argument('--num-param', type=int, default=0, metavar='num', help='index of param')
 args = parser.parse_args()
 
 
@@ -31,6 +32,7 @@ args = parser.parse_args()
 env = gym.make('Cartpole-param-v0')
 print(args.mass)
 print(args.length)
+print(args.numm_param)
 # mass then length
 env.param_switch(args.mass, args.length)
 # env.seed(args.seed)
@@ -117,7 +119,7 @@ def main():
     print vector
 
     numpy_vector = vector.detach().numpy()
-    name = 'weights_' + str(args.mass) + '_' + str(args.length) + '.txt'
+    name = 'weights_' +args.num_param+'_'+ str(args.mass) + '_' + str(args.length) + '.txt'
 
     np.savetxt(name, numpy_vector, fmt='%f')
 
