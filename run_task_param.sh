@@ -11,4 +11,4 @@ MASS="$(cut -d' ' -f1 <<<$PARAMS)"
 LENGTH="$(cut -d' ' -f2 <<<$PARAMS)"
 echo $MASS
 echo $LENGTH
-python /home/ngopalan/workspace/task_param_expts/task_parameterization/reinforce.py --mass $MASS --length $LENGTH
+python /home/ngopalan/workspace/task_param_expts/task_parameterization/reinforce.py --mass $MASS --length $LENGTH --num-param $line_num

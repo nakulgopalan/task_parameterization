@@ -1,5 +1,6 @@
 import argparse
 import gym
+import time 
 import gym_param
 import numpy as np
 from itertools import count
@@ -32,7 +33,7 @@ args = parser.parse_args()
 env = gym.make('Cartpole-param-v0')
 print(args.mass)
 print(args.length)
-print(args.numm_param)
+print(args.num_param)
 # mass then length
 env.param_switch(args.mass, args.length)
 # env.seed(args.seed)
@@ -91,7 +92,7 @@ def finish_episode():
 def main():
     running_reward = 10
 
-    for i_episode in count(1):
+    for i_episode in range(5000):
         state = env.reset()
         for t in range(10000):  # Don't infinite loop while learning
             action = select_action(state)
@@ -119,7 +120,7 @@ def main():
     print vector
 
     numpy_vector = vector.detach().numpy()
-    name = 'weights_' +args.num_param+'_'+ str(args.mass) + '_' + str(args.length) + '.txt'
+    name = 'weights_' +str(args.num_param) +'_'+ str(args.mass) + '_' + str(args.length) + '.txt'
 
     np.savetxt(name, numpy_vector, fmt='%f')
 
