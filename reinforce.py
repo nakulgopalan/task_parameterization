@@ -1,5 +1,6 @@
 import argparse
 import gym
+import time 
 import gym_param
 import numpy as np
 from itertools import count
@@ -20,13 +21,21 @@ parser.add_argument('--render', action='store_true',
                     help='render the environment')
 parser.add_argument('--log-interval', type=int, default=10, metavar='N',
                     help='interval between training status logs (default: 10)')
+parser.add_argument('--mass', type=float, default=0.1, metavar='mass',
+                    help='mass of pendulum, default, 0.1')
+parser.add_argument('--length', type=float, default=0.5, metavar='length',
+                    help='length of pendulum, default, 0.5')
+parser.add_argument('--num-param', type=int, default=0, metavar='num', help='index of param')
 args = parser.parse_args()
 
 
 # env = gym.make('CartPole-v0')
 env = gym.make('Cartpole-param-v0')
+print(args.mass)
+print(args.length)
+print(args.num_param)
 # mass then length
-env.param_switch(.1, 0.5)
+env.param_switch(args.mass, args.length)
 # env.seed(args.seed)
 torch.manual_seed(args.seed)
 hidden_layer_size = 4
@@ -83,7 +92,7 @@ def finish_episode():
 def main():
     running_reward = 10
 
-    for i_episode in count(1):
+    for i_episode in range(5000):
         state = env.reset()
         for t in range(10000):  # Don't infinite loop while learning
             action = select_action(state)
@@ -104,17 +113,25 @@ def main():
                   "the last episode runs to {} time steps!".format(running_reward, t))
             break
 
-    model_parameters = policy.parameters()#filter(lambda p: p.requires_grad, policy.parameters())
-    print(model_parameters)
+    # model_parameters = policy.parameters()#filter(lambda p: p.requires_grad, policy.parameters())
+    # print(model_parameters)
 
-    params = sum([np.prod(p.size()) for p in model_parameters])
-    print(params)
+    vector = torch.nn.utils.parameters_to_vector(policy.parameters())
+    print vector
 
-    torch.save(policy.state_dict(), 'reinforce_test.pt')
+    numpy_vector = vector.detach().numpy()
+    name = 'weights_' +str(args.num_param) +'_'+ str(args.mass) + '_' + str(args.length) + '.txt'
 
-    new_policy = Policy()
-    new_policy.load_state_dict(torch.load('reinforce_test.pt'))
-    print(new_policy.parameters())
+    np.savetxt(name, numpy_vector, fmt='%f')
+
+    # The next few lines load a policy model when needed!
+
+    # new_vector = torch.from_numpy(numpy_vector)
+    #
+    # new_policy = Policy()
+    # torch.nn.utils.vector_to_parameters(new_vector,new_policy.parameters())
+    # print(torch.nn.utils.parameters_to_vector(new_policy.parameters()))
+
 
 
 
