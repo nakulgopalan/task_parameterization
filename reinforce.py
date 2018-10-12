@@ -26,7 +26,7 @@ args = parser.parse_args()
 # env = gym.make('CartPole-v0')
 env = gym.make('Cartpole-param-v0')
 # mass then length
-env.param_switch(10., 0.25)
+env.param_switch(.1, 0.5)
 # env.seed(args.seed)
 torch.manual_seed(args.seed)
 hidden_layer_size = 4
