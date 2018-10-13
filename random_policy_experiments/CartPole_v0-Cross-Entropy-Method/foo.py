@@ -37,10 +37,7 @@ def evaulate_policy(w, env, number_of_episodes=2):
             break
         # results.append(t)
         # print(t)
-    if t>190:
-        return 1
-    else:
-        return 0
+    return t
 
 
 def estimator(w_list, noise_coef):
