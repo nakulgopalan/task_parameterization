@@ -14,7 +14,8 @@ import matplotlib.pyplot as plt
 # PARAMETERS
 t0 = time.time()
 
-policies_to_test = 10
+
+policies_to_test = 1000
 episodes_for_evaluation = 100
 
 env = gym.make('CartPole-v0')
