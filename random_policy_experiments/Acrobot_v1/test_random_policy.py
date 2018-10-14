@@ -36,8 +36,7 @@ for i in range(policies_to_test):
         if (min_steps > r):
             min_steps = r
 
-    results[i] = (rsum / episodes_for_evaluation, min_steps,w)
-    print(results[i])
+    results[i] = (rsum / episodes_for_evaluation, min_steps, w)
 
 env.close()
 
@@ -47,8 +46,6 @@ total_n = t1-t0
 
 print("time taken: " + str(total_n))
 
-
-
 meanr = np.zeros(policies_to_test)
 minlen = np.zeros(policies_to_test)
 tosave = np.zeros((policies_to_test, 8))
@@ -56,7 +53,6 @@ for i in range(policies_to_test):
     meanr[i] = results[i][0]
     minlen[i] = results[i][1]
     tosave[i, :] = np.concatenate((np.array([results[i][0], results[i][1]], dtype=np.float), results[i][2]))
-
 
 # plot
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 12))
