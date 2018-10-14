@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 # PARAMETERS
 t0 = time.time()
 
-policies_to_test = 10
+policies_to_test = 1000000
 episodes_for_evaluation = 100
 
 env = gym.make('CartPole-v0')
@@ -59,20 +59,19 @@ for i in range(policies_to_test):
     tosave[i, :] = np.concatenate((np.array([results[i][0], results[i][1]], dtype=np.float), results[i][2]))
 
 np.save('{0}'.format(policies_to_test), tosave)
-print(tosave)
 
 # the histogram of the data
 ax1.hist(eplen, episodes_for_evaluation)
 ax1.set_yscale('log')
 ax1.set_xlabel('Episodes')
 ax1.set_ylabel('# Random Policies')
-ax1.set_title('Number of Random Episodes Completed vs. Policies ({0})'.format(policies_to_test))
+ax1.set_title('Histogram of Episodes Until Failure vs. Random Policies ({0} Total)'.format(policies_to_test))
 
 ax2.hist(meanr, 200)
 ax2.set_yscale('log')
 ax2.set_xlabel('Mean Reward')
 ax2.set_ylabel('# Random Policies')
-ax2.set_title('Mean Reward vs. Policies ({0})'.format(policies_to_test))
+ax2.set_title('Histogram of Mean Rewards vs. Random Policies ({0} Total)'.format(policies_to_test))
 
 plt.savefig('{0}.png'.format(policies_to_test))
 plt.show()
