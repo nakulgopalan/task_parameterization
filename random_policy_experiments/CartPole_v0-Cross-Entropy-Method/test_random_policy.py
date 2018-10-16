@@ -10,11 +10,28 @@ import numpy as np
 import time
 import matplotlib
 import matplotlib.pyplot as plt
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.autograd as autograd
+import torch.nn.utils as U
+import torch
+
+
+class Policy(nn.Module):
+    def __init__(self):
+        super(Policy, self).__init__()
+
+        self.model = nn.Sequential(
+            nn.Linear(4, 1, bias=False)
+        )
+
+    def forward(self, s):
+        return self.model(s)
 
 # PARAMETERS
 t0 = time.time()
 
-policies_to_test = 1000000
+policies_to_test = 100
 episodes_for_evaluation = 100
 
 env = gym.make('CartPole-v0')
@@ -27,18 +44,21 @@ results = {}
 # MAIN ALGORITHM
 for i in range(policies_to_test):
     print(i)
-    w = np.random.rand(4)
     eps = 0
     rsum = 0.0
     failed = False
+    p = Policy()
+    U.vector_to_parameters(torch.FloatTensor(np.random.rand(4)), p.parameters())
+    p.eval()
+
     for j in range(1, episodes_for_evaluation + 1):
-        r = evaulate_policy(w, env, number_of_episodes=1)
+        r = evaulate_policy(p, env, number_of_episodes=1)
         rsum += r
         if r >= 195 and not failed:
             eps = j
         else:
             failed = True
-    results[i] = (eps, rsum / episodes_for_evaluation, w)
+    results[i] = (eps, rsum / episodes_for_evaluation, (0, 0, 0, 0))
 
 env.close()
 
